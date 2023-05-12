@@ -2,9 +2,7 @@
 Repository of 2023-1-Web-Programming Game Project.
 
 # Used Stacks and Frameworks
-HTML
-Javascript
-Phaser3
+HTML\nJavascript\nPhaser3
 
 # Members
 | 학번 | 이름 | 담당 |
