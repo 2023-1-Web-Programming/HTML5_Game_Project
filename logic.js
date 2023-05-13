@@ -43,7 +43,7 @@ function create() {
 
   this.add.image(400, 400, 'background');
   // characters[Math.floor(Math.random() * characters.length)]
-  cursors = this.input.keyboard.createCursorKeys();
+  KeyInput = this.input.keyboard.createCursorKeys();
 
 }
 
@@ -63,44 +63,21 @@ function update() {
 //수정해야 할 사항
 // 키보드 떼기 전까지 갱신 X 
 // 키보드 입력과 이미지 파일이 맞는지 확인 
-  if (cursors.left.isDown) 
-  {
-    if(objs[0] == characters[0]) {
-      invalidate();
-    }
-    else {
-      this.add.text(400, 400, "wrong");
-    }
-  }
-  else if (cursors.right.isDown)
-  {
-    if(objs[0] == characters[1]) {
-      invalidate();
-    }
-    else {
-      this.add.text(400, 400, "wrong");
-    }
-  }
-  else if (cursors.up.isDown)
-  {
-    if(objs[0] == characters[2]) {
-      invalidate();
-    }
-    else {
-      this.add.text(400, 400, "wrong");
-    }
-  }
+  
+if (Phaser.Input.Keyboard.JustDown(KeyInput.left)) {
+  if (isA()) invalidate();
+}
+else if (Phaser.Input.Keyboard.JustDown(KeyInput.down)) {
+
+  if (isB())  invalidate();
+} 
+else if (Phaser.Input.Keyboard.JustDown(KeyInput.right)) {
+
+  if (isC())  invalidate();
+}
 
 
-  // Update score text
-  // scoreText.setText('Score: ' + score);
-
-  // Move to the next character when a mapped key is pressed
-  // You can implement the key mapping logic here, using Phaser's keyboard input
-  // For example, you can use this.input.keyboard.addKey('SPACE') to detect the spacebar press
-
-
-  // When a key is pressed, increment the characterIndex and check for game over condition
+  
 }
 
 function initObjs() {
@@ -129,4 +106,23 @@ function invalidate()
       objs[i] = objs[i+1];
   }
   objs[rearind] = characters[Math.floor(Math.random() * characters.length)];
+}
+
+
+function isA()
+{
+  if (objs[0] == 'A') return true;
+  else return false;
+}
+
+function isB()
+{
+  if (objs[0] == 'B') return true;
+  else return false;
+}
+
+function isC()
+{
+  if (objs[0] == 'C') return true;
+  else return false;
 }
