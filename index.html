@@ -1,42 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title> HTML5 GAME </title>
+    <title> Character Classifying Game </title>
+    <script src = "phaser.min.js"></script>
+    <meta charset="UTF-8">
 
 </head>
-<body>
-<script src="phaser.js">
-// 게임 크기와 게임 생성
-var config = {
-  type: Phaser.AUTO,
-  width: 800,
-  height: 600,
-  scene: {
-    preload: preload,
-    create: create,
-    update: update
-  }
-};
+<body >
+  <div id = "game-container">
 
-var game = new Phaser.Game(config);
+  </div>
 
-// 리소스 로드
-function preload() {
-  // 이미지, 오디오 등의 리소스를 로드하는 로직을 작성합니다.
-}
-
-// 게임 생성
-function create() {
-  // 게임 오브젝트를 생성하고 초기화하는 로직을 작성합니다.
-}
-// 게임 업데이트
-function update() {
-  // 게임 상태를 업데이트하는 로직을 작성합니다.
-}
-
-
-
-
+<script type = "text/javascript" src = "logic.js">
 </script>
 
 
