@@ -1,123 +1,101 @@
-var config = {
-  parent: 'game-container',
-  type: Phaser.CANVAS,
-  width: 800,
-  height: 800,
-  scene: {
-    preload: preload,
-    create: create,
-    update : update
+    // 상수 선언부
+    const OBJS_START_POS_X = 400;
+    const OBJS_START_POS_Y = 500;
+    const OBJS_SPACE = 30;
+    const REAR_IND = 19;
+    
+class Logic extends Phaser.Scene{
+  constructor(){
+    super("Logic");
+   
+    this.objs = [];
+    this.characters = ['A', 'B', 'C']; // Array of character types
+    this.characterIndex = 0; // Current character index
+    this.score = 0; // Player's score
+    this.time = 30; // Initial time limit in seconds
+    
+    this.KeyInput;
+    this.initObjs();
+
   }
-};
 
-var game = new Phaser.Game(config);
-var objs = [];
-
-// 상수 선언부
-const OBJS_START_POS_X = 400;
-const OBJS_START_POS_Y = 500;
-const OBJS_SPACE = 30;
-const REAR_IND = 19;
-
-
-// Define game variables
-var characters = ['A', 'B', 'C']; // Array of character types
-var characterIndex = 0; // Current character index
-var score = 0; // Player's score
-var time = 30; // Initial time limit in seconds
-
-let debounceTimer;
-// Preload assets
-function preload() {
+  preload() {
   
-  this.load.image('background', 'media/background/background.png');
-  this.load.image('A', 'media/characters/bear.png');
-  this.load.image('B', 'media/characters/duck.png');
-  this.load.image('C', 'media/characters/pig.png');
-  initObjs();
+    this.load.image('background', 'media/background/background.png');
+   
+  }
 
-  // Load character images or spritesheets if needed
-
-}
-
-// Create game elements
-function create() {
-  // Add background image
-
-  this.add.image(400, 400, 'background');
-  // characters[Math.floor(Math.random() * characters.length)]
-  KeyInput = this.input.keyboard.createCursorKeys();
-
-}
-
-// Update game elements
-function update() {
-  this.add.image(400, 400, 'background');
+  create() {
+    // Add background image
   
-  let sprite = objs[0];
+    this.add.image(400, 400, 'background');
+    // characters[Math.floor(Math.random() * characters.length)]
+    
+    this.KeyInput = this.input.keyboard.createCursorKeys();
   
-  // characters[Math.floor(Math.random() * characters.length)]
   
-  for(let i = REAR_IND ; i > -1 ; i--)
+  }
+
+  update() {
+    this.add.image(400, 400, 'background');
+    
+    let sprite = this.objs[0];
+    
+    // characters[Math.floor(Math.random() * characters.length)]
+    
+    for(let i = REAR_IND ; i > -1 ; i--)
+    {
+        this.add.sprite(OBJS_START_POS_X, OBJS_START_POS_Y - i * OBJS_SPACE, this.objs[i]);
+    }
+  
+  
+      // 키보드 입력 1회 인식 및 갱신
+      if (Phaser.Input.Keyboard.JustDown(this.KeyInput.left)) {
+      if (this.isA()) this.invalidate();
+      }
+      else if (Phaser.Input.Keyboard.JustDown(this.KeyInput.down)) {
+      
+      if (this.isB())  this.invalidate();
+      } 
+      else if (Phaser.Input.Keyboard.JustDown(this.KeyInput.right)) {
+      
+      if (this.isC())  this.invalidate();
+      }
+
+  }
+
+  initObjs() 
   {
-      this.add.sprite(OBJS_START_POS_X, OBJS_START_POS_Y - i * OBJS_SPACE, objs[i]);
+    for(let i = 0 ; i <= REAR_IND ; i++)
+    {
+        this.objs[i] = this.characters[Math.floor(Math.random() * this.characters.length)];
+    }
   }
 
-
-// 키보드 입력 1회 인식 및 갱신
-if (Phaser.Input.Keyboard.JustDown(KeyInput.left)) {
-  if (isA()) invalidate();
-}
-else if (Phaser.Input.Keyboard.JustDown(KeyInput.down)) {
-
-  if (isB())  invalidate();
-} 
-else if (Phaser.Input.Keyboard.JustDown(KeyInput.right)) {
-
-  if (isC())  invalidate();
-}
-
-
-  
-}
-
-function initObjs() {
-  for(let i = 0 ; i <= REAR_IND ; i++)
-  {
-      objs[i] = characters[Math.floor(Math.random() * characters.length)];
-  }
-}
-
-function printObjs()
-{
-      document.write(objs+ "<br>");
-}
-
-
-function invalidate()
+  invalidate()
 {
   for(let i = 0 ; i < REAR_IND ; i++)
   {
-      objs[i] = objs[i+1];
+      this.objs[i] = this.objs[i+1];
   }
-  objs[REAR_IND] = characters[Math.floor(Math.random() * characters.length)];
+  this.objs[REAR_IND] = this.characters[Math.floor(Math.random() * this.characters.length)];
 }
 
-
-function isA()
+isA()
 {
-  if (objs[0] == 'A') return true;
+  if (this.objs[0] == 'A') return true;
   else return false;
 }
 
-function isB()
+isB()
 {
-  if (objs[0] == 'B') return true;
+  if (this.objs[0] == 'B') return true;
+  else return false;
+}
+isC()
+{
+  if (this.objs[0] == 'C') return true;
   else return false;
 }
 
-function isC()
-{
-  if (objs[0] == 'C') return true;
-  else return false;
 }
