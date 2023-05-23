@@ -7,6 +7,7 @@
 
 var time = 30;
 var score = 0;
+var progressValue = 0;
 
 var config = {
     parent: 'game-container',
@@ -30,7 +31,7 @@ function preload() {
     this.load.image('pigarrow', 'media/arrow/pigarrow.png');
     this.load.image('birdarrow', 'media/arrow/birdarrow.png');
     this.load.image('beararrow', 'media/arrow/beararrow.png');
-   
+    this.load.image('progressBar', 'media/progressbar/progressBar.png');
   }
 
   function create(){
@@ -68,6 +69,7 @@ function preload() {
       this.characters = ['A', 'B', 'C']; // Array of character types
       this.characterIndex = 0; // Current character index
       this.KeyInput;
+      this.progressBar;
       
 
       //오브젝트 생성 및 초기화
@@ -91,8 +93,9 @@ function preload() {
       this.add.image(400, 400, 'background');
       
       this.KeyInput = this.input.keyboard.createCursorKeys();
-      
     
+      this.progressBar = this.add.image(game.config.width / 5, game.config.height / 10, 'progressBar');//크기 조정
+      this.progressBar.setOrigin(0.5, 0.5);
     }
 
     update() {
@@ -103,7 +106,9 @@ function preload() {
       this.add.image(250, 600, 'beararrow');
       this.add.image(400, 680, 'birdarrow');
 
-      
+      this.progressBar = this.add.image(game.config.width / 5, game.config.height / 10, 'progressBar');//크기 조정
+      this.progressBar.setOrigin(0.5, 0.5);
+      this.progressBar.setScale(progressValue, 1); 
       
       let sprite = this.objs[0];
       
@@ -114,16 +119,24 @@ function preload() {
     
     
         // 키보드 입력 1회 인식 및 갱신
-        if (Phaser.Input.Keyboard.JustDown(this.KeyInput.left)) {
-        if (this.isA()) this.invalidate();
+      if (Phaser.Input.Keyboard.JustDown(this.KeyInput.left)) {
+        if (this.isA()) {
+          this.increaseProgress(0.1);
+          this.invalidate();
         }
-        else if (Phaser.Input.Keyboard.JustDown(this.KeyInput.down)) {
-        
-        if (this.isB())  this.invalidate();
+      }
+      else if (Phaser.Input.Keyboard.JustDown(this.KeyInput.down)) {
+        if (this.isB()) {
+            this.increaseProgress(0.1);
+            this.invalidate();
+          }
         } 
         else if (Phaser.Input.Keyboard.JustDown(this.KeyInput.right)) {
         
-        if (this.isC())  this.invalidate();
+          if (this.isC()) {
+            this.increaseProgress(0.1);
+            this.invalidate();
+          }
         }
   
        
@@ -134,12 +147,28 @@ function preload() {
           this.add.text(320, 50, "end", { font: "100px Arial", fill: "#FF0000" }); //종료 확인용(없어도 됨)
           //종료 화면 출력하는 함수 자리!!
         }
-
-        
- 
-
     }
-  
+
+    feverTime() 
+    {
+      // //fever time 유지 시간 동안
+      // while (fever_remain_time > 0) 
+      // {
+      //   if (Phaser.Input.Keyboard.JustDown())//어떤 키를 누르든
+      //   {
+      //     invalidate();// 패스가 된다.
+      //   }
+      // }
+      progressValue = 0;
+    } 
+    increaseProgress(value) 
+    {
+      progressValue = Phaser.Math.Clamp(progressValue + value, 0, 1);
+      this.progressBar.setScale(progressValue, 1);
+      if (progressValue == 1)
+        this.feverTime();
+    }
+
     initObjs() 
         {
         for(let i = 0 ; i <= REAR_IND ; i++)
