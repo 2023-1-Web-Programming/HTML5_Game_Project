@@ -186,7 +186,7 @@ class Logic extends Phaser.Scene {
     this.border.strokeRect(x, y, width, height);
 
     // 키보드 입력 1회 인식 및 갱신
-    if (this.isPenalty == 0)
+    if (this.isPenalty == 0 && this.fever_remain_time <= 0)
     {
       if (Phaser.Input.Keyboard.JustDown(this.KeyInput.left)) {
         if (this.isA()) {
@@ -236,8 +236,13 @@ class Logic extends Phaser.Scene {
 
     if (this.fever_remain_time > 0) {
       this.feverText = this.add.text(400, 300, 'Fevertime!!!!', { font: '32px Lato', fill: '#ff0000' });
+      this.add.text(200, 300, '!!!PUSH SPACEBAR!!!', { font: '40px lato', fill: '#ff0000' });
       this.feverText.setOrigin(0.5);
-      this.feverText.visible = true;
+      if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.keys[32])) 
+      {
+        score++;
+        this.invalidate();
+      }
     }
 
     if (this.penalty_sum >= 3) {
