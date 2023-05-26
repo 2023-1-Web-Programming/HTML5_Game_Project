@@ -5,7 +5,7 @@
       const OBJS_SPACE = 30;
       const REAR_IND = 19;
 
-var time = 2;
+var time = 15;
 var score = 0;
 var progressValue = 0;
 
@@ -117,8 +117,15 @@ function preload() {
       this.progressBar = this.add.image(game.config.width / 5, game.config.height / 10, 'progressBar');//크기 조정
       this.progressBar.setOrigin(0.5, 0.5);
 
-     
-
+      this.border = this.add.graphics();
+      var x = 13;
+      var y = this.progressBar.height / 2;
+      var width = this.progressBar.width / 1.5;
+      var height = this.progressBar.height / 6;
+      var lineWidth = 4;
+      var lineColor = 0xff0000;
+      this.border.lineStyle(lineWidth, lineColor);
+      this.border.strokeRect(x, y, width, height);
       
     }
 
@@ -140,7 +147,16 @@ function preload() {
       {
           this.add.sprite(OBJS_START_POS_X, OBJS_START_POS_Y - i * OBJS_SPACE, this.objs[i]);
       }
-    
+
+      this.border = this.add.graphics();
+      var x = 13;
+      var y = this.progressBar.height / 2;
+      var width = this.progressBar.width / 1.5;
+      var height = this.progressBar.height / 6;
+      var lineWidth = 4;
+      var lineColor = 0xff0000;
+      this.border.lineStyle(lineWidth, lineColor);
+      this.border.strokeRect(x, y, width, height);    
     
         // 키보드 입력 1회 인식 및 갱신
       if (Phaser.Input.Keyboard.JustDown(this.KeyInput.left)) {
