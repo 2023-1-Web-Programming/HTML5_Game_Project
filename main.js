@@ -6,9 +6,10 @@ const OBJS_SPACE = 30;
 const REAR_IND = 19;
 const FEVER_TIME = 5;
 
-var time = 15;
+var time = 30;
 var score = 0;
 var progressValue = 0;
+var finished = false;
 
 var config = {
   parent: 'game-container',
@@ -50,9 +51,7 @@ function descriptionPage() {
   //  this.add.image(400,400,'background');
   this.input.keyboard.off('keydown-ENTER', descriptionPage, this);
 
-
-
-  desText = this.add.text(400, 300, '방향키로 동물을 분류하는 게임입니다.\n\n플레이어는 왼쪽, 오른쪽, 아래 방향키를 통해 \n시간 내에 최대한 많은 동물을 분류해야 합니다.\n\n누적 20번의 분류를 성공하면\n일정 시간 동안 점수를 더 주는 FEVER TIME 에 진입합니다.\n연속해서 3번 이상 틀리면 잠시 분류를 할 수 없습니다.\n\n\n왼쪽 방향키(←) : 곰\n\n오른쪽 방향키(→) : 돼지\n\n아래 방향키( ↓ ) : 오리\n\n\n게임을 시작하려면 엔터를 누르세요. ', { fontSize: '25px', fontFamily: 'Lato', fill: '#000000' }).setOrigin(0.5);
+  desText = this.add.text(400, 300, '방향키로 동물을 분류하는 게임입니다.\n\n플레이어는 왼쪽, 오른쪽, 아래 방향키를 통해 \n시간 내에 최대한 많은 동물을 분류해야 합니다.\n\n누적 20번의 분류를 성공하면\n일정 시간 동안 점수를 두 배로 주는 FEVER TIME 에 진입합니다.\n연속해서 3번 이상 틀리면 잠시 분류를 할 수 없습니다.\n\n\n왼쪽 방향키(←) : 곰\n\n오른쪽 방향키(→) : 돼지\n\n아래 방향키( ↓ ) : 오리\n\n\n게임을 시작하려면 엔터 키를 누르세요. ', { fontSize: '25px', fontFamily: 'Lato', fill: '#000000' }).setOrigin(0.5);
 
   startKey = this.input.keyboard.on('keydown-ENTER', startGame, this);
 
@@ -62,10 +61,6 @@ function startGame() {
 
   desText.destroy();
 
-
-
-
-
   this.input.keyboard.off('keydown-ENTER', startGame, this);
 
   // Add your game logic here
@@ -73,11 +68,39 @@ function startGame() {
 
   // 게임 시작
   game.scene.add('Logic', Logic);
+
+  game.scene.add('Finish', Finish);
   game.scene.start('Logic');
 
 }
 
+function finishedScreen(){
+  game.scene.stop('Logic');
+  game.scene.start('Finish');
+}
+
+
 var game = new Phaser.Game(config);
+
+class Finish extends Phaser.Scene{
+  constructor(){
+    super("Finish");
+    
+  }
+  create(){
+
+    
+    this.finMsg =  this.add.text(400, 250, "!!! 게임 종료 !!!", {fontSize: '40px', fontFamily: 'Lato', fill: '#000000' }).setOrigin(0.5);
+    this.finText = this.add.text(400, 350, "점수 : "+ score + " 점\n", { fontSize: '40px', fontFamily: 'Lato', fill: '#000000' }).setOrigin(0.5);
+    
+    this.prod = this.add.text(400, 600, "-만든 사람들-\n18011688 차태관\n22011612 조준협\n18011591 김준엽", { fontSize: '20px', fontFamily: 'Lato', fill: '#000000' }).setOrigin(0.5);
+
+  }
+  update(){
+    
+  
+  }
+}
 
 
 class Logic extends Phaser.Scene {
@@ -159,6 +182,7 @@ class Logic extends Phaser.Scene {
     var lineWidth = 4;
     var lineColor = 0xff0000;
     this.border.lineStyle(lineWidth, lineColor);
+   
     this.border.strokeRect(x, y, width, height);
 
     // 키보드 입력 1회 인식 및 갱신
@@ -198,25 +222,28 @@ class Logic extends Phaser.Scene {
     }
 
 
-    this.add.text(30, 30, score, { font: "25px Arial", fill: "#000000" });
-    this.add.text(750, 30, time, { font: "25px Arial", fill: "#000000" });
+    this.add.text(30, 30, "Score : " + score, { font: "25px lato", fill: "#000000" });
+    this.add.text(670, 30, "Time :  " + time, { font: "25px lato", fill: "#000000" });
 
     if (time <= 0) {
-      this.add.text(320, 50, "end", { font: "100px Arial", fill: "#FF0000" }); //종료 확인용(없어도 됨)
-      console.log('end');
+      this.add.text(320, 50, "end", { font: "100px lato", fill: "#FF0000" }); //종료 확인용(없어도 됨)
       //종료 화면 출력하는 함수 자리!!
+      
+      finished = true;
+
+      finishedScreen();
     }
 
     if (this.fever_remain_time > 0) {
-      this.feverText = this.add.text(400, 300, 'Fevertime!!!!', { font: '32px Arial', fill: '#ff0000' });
+      this.feverText = this.add.text(400, 300, 'Fevertime!!!!', { font: '32px Lato', fill: '#ff0000' });
       this.feverText.setOrigin(0.5);
       this.feverText.visible = true;
     }
 
     if (this.penalty_sum >= 3) {
       this.isPenalty = 1;
-      this.penaltyText = this.add.text(400, 300, 'PUSH SPACEBAR!', { font: '32px Arial', fill: '#ff0000' });
-      this.add.text(390, 250, this.realease_sum, { font: '32px Arial', fill: '#ff0000' });
+      this.penaltyText = this.add.text(400, 300, '!!!PUSH SPACEBAR!!!', { font: '40px lato', fill: '#ff0000' });
+      this.add.text(390, 250, this.realease_sum, { font: '40px Arial', fill: '#ff0000' });
       this.penaltyText.setOrigin(0.5);
       this.penaltyText.visible = true;
       this.penalty();
