@@ -5,7 +5,7 @@
       const OBJS_SPACE = 30;
       const REAR_IND = 19;
 
-var time = 30;
+let time = 30;
 var score = 0;
 var progressValue = 0;
 
@@ -77,12 +77,14 @@ function preload() {
    
      // 시간 측정
     
-     this.interval = setInterval( setInterval(function() {
-        time--;
-          if (time === 0) {
-          clearInterval(interval);
-        }
-      }, 1000));
+     const timer = setInterval(() => {
+      console.log(time);
+      time--;
+    
+      if (time <= 0) {
+        clearInterval(timer);
+      }
+    }, 1000);
   
     }
     
@@ -143,8 +145,9 @@ function preload() {
         this.add.text(30, 30, score, { font: "25px Arial", fill: "#000000" });
         this.add.text(750, 30, time, { font: "25px Arial", fill: "#000000" });
 
-        if(this.time == 0) {
+        if(time <= 0) {
           this.add.text(320, 50, "end", { font: "100px Arial", fill: "#FF0000" }); //종료 확인용(없어도 됨)
+          console.log('end');
           //종료 화면 출력하는 함수 자리!!
         }
     }
