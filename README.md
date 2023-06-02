@@ -16,3 +16,6 @@ Repository of 2023-1-Web-Programming Game Project.
 | 18011591 | 김준엽 | Game Logic |
 
 
+# Game Preview
+
+![Desktop_2023_06_02_-_13_13_43_02_AdobeExpress (2)](https://github.com/2023-1-Web-Programming/HTML5_Game_Project/assets/38041722/e596820b-9936-4f4b-9951-c4f200530cc9)

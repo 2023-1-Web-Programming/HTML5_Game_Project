@@ -1,4 +1,3 @@
-//import Logic from ".Logic.js";
 // 상수 선언부
 const OBJS_START_POS_X = 400;
 const OBJS_START_POS_Y = 500;
@@ -6,6 +5,7 @@ const OBJS_SPACE = 30;
 const REAR_IND = 19;
 const FEVER_TIME = 5;
 
+// 전역 변수 선언부
 var time = 30;
 var score = 0;
 var combo = 0;
@@ -39,19 +39,21 @@ function preload() {
   this.load.image('progressBar', 'media/progressbar/progressBar.png');
 }
 
+// 타이틀 화면 생성
 function create() {
-
   titleimg = this.add.image(400, 400, 'title');
 
-
+  // 키 리스너 등록
   desKey = this.input.keyboard.on('keydown-ENTER', descriptionPage, this);
-
 }
 
-function descriptionPage() {
-  titleimg.destroy();
-  this.input.keyboard.off('keydown-ENTER', descriptionPage, this);
 
+// 설명 화면 생성
+function descriptionPage() {
+  titleimg.destroy();  // 타이틀 화면 제거
+
+  this.input.keyboard.off('keydown-ENTER', descriptionPage, this);
+  // 설명 출력
   desText = this.add.text(400, 350, '방향키로 동물을 분류하는 게임입니다.\n\n플레이어는 왼쪽, 오른쪽, 아래 방향키를 통해 \n시간 내에 최대한 많은 동물을 분류해야 합니다.\n\n누적 20번의 분류를 성공하면\n일정 시간 동안 점수를 두 배로 주는 FEVER TIME 에 진입합니다.\nFever Time 에 진입하면 SPACEBAR 를 연타해서\n점수를 많이 획득할 수 있습니다.\n연속해서 3번 이상 틀리면 잠시 분류를 할 수 없습니다.\n\n\n왼쪽 방향키( ← ) : 곰\n\n오른쪽 방향키( → ) : 돼지\n\n아래 방향키( ↓ ) : 오리\n\n\n게임을 시작하려면 엔터 키를 누르세요. ', { fontSize: '25px', fontFamily: 'Lato', fill: '#000000' }).setOrigin(0.5);
 
   startKey = this.input.keyboard.on('keydown-ENTER', startGame, this);
@@ -62,26 +64,26 @@ function startGame() {
 
   desText.destroy();
 
+  // 키보드 입력 리스너 제거
   this.input.keyboard.off('keydown-ENTER', startGame, this);
 
-  // Add your game logic here
-
-
-  // 게임 시작
+  // 게임 씬 추가
   game.scene.add('Logic', Logic);
   game.scene.add('Finish', Finish);
-  game.scene.start('Logic');
+
+  // 인게임 화면 시작
+  game.scene.start('Logic'); 
 
 }
 
+// 게임 화면 종료 및 종료 화면 시작
 function finishedScreen(){
   game.scene.stop('Logic');
   game.scene.start('Finish');
 }
 
-
+//게임 객체 생성
 var game = new Phaser.Game(config);
-
 
 
 //종료 화면
@@ -99,11 +101,13 @@ class Finish extends Phaser.Scene{
     this.prod = this.add.text(400, 600, "  -만든 사람들-\n18011688 차태관\n22011612 조준협\n18011591 김준엽", { fontSize: '20px', fontFamily: 'Lato', fill: '#000000' }).setOrigin(0.5);
 
   }
+
   update(){
     
   
   }
 
+  // 등급 판별
   Score(){
     if(score >= 130)
       grade = 'A';  
@@ -111,21 +115,21 @@ class Finish extends Phaser.Scene{
       grade = 'B';
     else if(score < 100 && score >= 70)
       grade = 'C';
-    else if (score < 70 && score >= 41)
+    else if (score < 70 && score >= 40)
       grade = 'D';
-    else if (score < 39)
+    else if (score < 40)
       grade = 'F';
   }
 }
 
-
+// 인게임 알고리즘 클래스
 class Logic extends Phaser.Scene {
   constructor() {
     super("Logic");
 
     this.objs = [];
-    this.characters = ['A', 'B', 'C']; // Array of character types
-    this.characterIndex = 0; // Current character index
+    this.characters = ['A', 'B', 'C']; 
+    this.characterIndex = 0; 
     this.KeyInput;
     this.progressBar;
     this.fever_remain_time = 0;
@@ -133,7 +137,7 @@ class Logic extends Phaser.Scene {
     this.realease_sum = 10;
     this.isPenalty = 0; // 0이면 페널티 아님, 1이면 페널티 받아야함
 
-    //오브젝트 생성 및 초기화
+    // 오브젝트 생성 및 초기화
     this.initObjs();
 
     // 시간 측정
@@ -143,6 +147,9 @@ class Logic extends Phaser.Scene {
       time--;
 
       if (time <= 0) {
+        progressValue = 0;
+        this.fever_remain_time = 0;
+        clearInterval(feverTimer);
         clearInterval(timer);
       }
     }, 1000);
@@ -160,6 +167,7 @@ class Logic extends Phaser.Scene {
     this.progressBar = this.add.image(game.config.width / 5, game.config.height / 10, 'progressBar');//크기 조정
     this.progressBar.setOrigin(0.5, 0.5);
 
+    // 피버타임 바 그리기
     this.border = this.add.graphics();
     var x = 13;
     var y = this.progressBar.height / 2;
@@ -186,6 +194,7 @@ class Logic extends Phaser.Scene {
 
     let sprite = this.objs[0];
 
+    // 오브젝트 배치
     for (let i = REAR_IND; i > -1; i--) {
       this.add.sprite(OBJS_START_POS_X, OBJS_START_POS_Y - i * OBJS_SPACE, this.objs[i]);
     }
@@ -237,9 +246,11 @@ class Logic extends Phaser.Scene {
       }
     }
 
-
+    // 점수, 시간 출력
     this.add.text(30, 30, "Score : " + score, { font: "25px lato", fill: "#000000" });
     this.add.text(670, 30, "Time :  " + time, { font: "25px lato", fill: "#000000" });
+    
+    // 콤보 출력
     if(combo < 5) {
       this.add.text(590, 100, combo + " Combo", { font: "20px lato", fill: "#000000" });
     }
@@ -262,15 +273,17 @@ class Logic extends Phaser.Scene {
       this.add.text(590, 100, combo + " Combo", { font: "32px lato", fill: "#FFFF33" });
     }
 
+
     if (time <= 0) {
-      this.add.text(320, 50, "end", { font: "100px lato", fill: "#FF0000" }); //종료 확인용(없어도 됨)
-      //종료 화면 출력하는 함수 자리!!
       
+      // 종료 불리언 변수 갱신
       finished = true;
 
+      // 종료 화면 출력
       finishedScreen();
     }
 
+    // 게임 종료 시 피버 타임 제거
     if (this.fever_remain_time > 0) {
       this.feverText = this.add.text(400, 280, 'Fevertime!!!!', { font: '40px Lato', fill: '#ff0000' });
       this.add.text(200, 300, '!!!PUSH SPACEBAR!!!', { font: '40px lato', fill: '#ff0000' });
@@ -283,6 +296,7 @@ class Logic extends Phaser.Scene {
       }
     }
 
+    // 틀린 방향키를 3번 이상 입력했을 때
     if (this.penalty_sum >= 3) {
       this.isPenalty = 1;
       this.penaltyText = this.add.text(400, 300, '!!!PUSH SPACEBAR!!!', { font: '40px lato', fill: '#ff0000' });
@@ -293,9 +307,10 @@ class Logic extends Phaser.Scene {
     }
   }
 
+  // 피버타임 함수
   feverTime() {
-    //fever time 유지 시간 동안
-    //score 2배씩 증가, value값 max에서 고정
+    // fever time 유지 시간 동안
+    // value값 max에서 고정
     this.fever_remain_time = FEVER_TIME;
     const feverTimer = setInterval(() => {
       console.log(this.fever_remain_time);
@@ -309,6 +324,7 @@ class Logic extends Phaser.Scene {
     }, 1000);
   }
 
+  
   penalty() {
     if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.keys[32])) {
       {
@@ -331,19 +347,27 @@ class Logic extends Phaser.Scene {
       this.feverTime();
   }
 
+  // 초기 오브젝트 추가
   initObjs() {
     for (let i = 0; i <= REAR_IND; i++) {
       this.objs[i] = this.characters[Math.floor(Math.random() * this.characters.length)];
     }
   }
 
+  // 오브젝트 갱신
   invalidate() {
     for (let i = 0; i < REAR_IND; i++) {
       this.objs[i] = this.objs[i + 1];
     }
+
+    // 오브젝트들은 맞는 방향키를 입력되었을 때 한칸씩 앞으로 밀려오며 마지막 인덱스의 오브젝트는 랜덤 함수를 이용해 세 오브젝트 중 하나가 선택되어 추가됌.
     this.objs[REAR_IND] = this.characters[Math.floor(Math.random() * this.characters.length)];
   }
 
+
+  // 해당하는 키보드를 알맞게 입력 했을 때 점수 및 콤보 반영
+
+  //A(곰) 객체일 때
   isA() {
     if (this.objs[0] == 'A') {
       score++;
@@ -360,6 +384,7 @@ class Logic extends Phaser.Scene {
     }
   }
 
+  //B(오리) 객체일 때
   isB() {
     if (this.objs[0] == 'B') {
       score++;
@@ -375,6 +400,8 @@ class Logic extends Phaser.Scene {
       return false;
     }
   }
+
+  //C(돼지) 객체일 때
   isC() {
     if (this.objs[0] == 'C') {
       score++;
