@@ -283,7 +283,7 @@ class Logic extends Phaser.Scene {
       finishedScreen();
     }
 
-    // 게임 종료 시 피버 타임 제거
+    // 피버 타임 동안 text 출력 및 스페이스 바 입력 받기
     if (this.fever_remain_time > 0) {
       this.feverText = this.add.text(400, 280, 'Fevertime!!!!', { font: '40px Lato', fill: '#ff0000' });
       this.add.text(200, 300, '!!!PUSH SPACEBAR!!!', { font: '40px lato', fill: '#ff0000' });
@@ -325,6 +325,7 @@ class Logic extends Phaser.Scene {
   }
 
   
+  // 페널티로 스파이스바를 10번 연타하게 
   penalty() {
     if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.keys[32])) {
       {
@@ -338,6 +339,7 @@ class Logic extends Phaser.Scene {
     }
   }
 
+  // 옳은 키가 입력되면 progressBar가 증가하도록
   increaseProgress(value) {
     if (progressValue != 1) {
       progressValue = Phaser.Math.Clamp(progressValue + value, 0, 1);
