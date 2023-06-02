@@ -6,7 +6,7 @@ const OBJS_SPACE = 30;
 const REAR_IND = 19;
 const FEVER_TIME = 5;
 
-var time = 30;
+var time = 10;
 var score = 0;
 var combo = 0;
 var grade = ' ';
@@ -143,6 +143,9 @@ class Logic extends Phaser.Scene {
       time--;
 
       if (time <= 0) {
+        progressValue = 0;
+        this.fever_remain_time = 0;
+        clearInterval(feverTimer);
         clearInterval(timer);
       }
     }, 1000);
@@ -295,7 +298,7 @@ class Logic extends Phaser.Scene {
 
   feverTime() {
     //fever time 유지 시간 동안
-    //score 2배씩 증가, value값 max에서 고정
+    //value값 max에서 고정
     this.fever_remain_time = FEVER_TIME;
     const feverTimer = setInterval(() => {
       console.log(this.fever_remain_time);
