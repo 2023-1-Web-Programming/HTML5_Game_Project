@@ -6,9 +6,9 @@ const OBJS_SPACE = 30;
 const REAR_IND = 19;
 const FEVER_TIME = 5;
 
-var time = 10;
+var time = 30;
 var score = 0;
-var grade = 'dummy';
+var grade = ' ';
 var progressValue = 0;
 var finished = false;
 
