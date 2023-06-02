@@ -12,6 +12,9 @@ var combo = 0;
 var grade = ' ';
 var progressValue = 0;
 var finished = false;
+var musicAD;
+var feverAD;
+var finishAD;
 
 var config = {
   parent: 'game-container',
@@ -37,11 +40,16 @@ function preload() {
   this.load.image('birdarrow', 'media/arrow/birdarrow.png');
   this.load.image('beararrow', 'media/arrow/beararrow.png');
   this.load.image('progressBar', 'media/progressbar/progressBar.png');
+  this.load.audio('main', 'media/sound/main_music.mp3');
+  this.load.audio('fever', 'media/sound/fever.mp3');
+  this.load.audio('finish', 'media/sound/fininsh_music.mp3');
 }
 
 // 타이틀 화면 생성
 function create() {
   titleimg = this.add.image(400, 400, 'title');
+  musicAD = this.sound.add('main');
+  musicAD.play(); // 배경음악 재생
 
   // 키 리스너 등록
   desKey = this.input.keyboard.on('keydown-ENTER', descriptionPage, this);
@@ -93,6 +101,9 @@ class Finish extends Phaser.Scene{
 
   }
   create(){
+    musicAD.pause(); //배경음악 중단
+    finishAD = this.sound.add('finish');
+    finishAD.play(); // 종료음악 재생
 
     this.Score();
     this.finMsg =  this.add.text(400, 250, "!!! 게임 종료 !!!", {fontSize: '40px', fontFamily: 'Lato', fill: '#000000' }).setOrigin(0.5);
@@ -283,7 +294,7 @@ class Logic extends Phaser.Scene {
       finishedScreen();
     }
 
-    // 게임 종료 시 피버 타임 제거
+    // 피버 타임 동안 text 출력 및 스페이스 바 입력 받기
     if (this.fever_remain_time > 0) {
       this.feverText = this.add.text(400, 280, 'Fevertime!!!!', { font: '40px Lato', fill: '#ff0000' });
       this.add.text(200, 300, '!!!PUSH SPACEBAR!!!', { font: '40px lato', fill: '#ff0000' });
@@ -311,6 +322,9 @@ class Logic extends Phaser.Scene {
   feverTime() {
     // fever time 유지 시간 동안
     // value값 max에서 고정
+    musicAD.pause(); // 배경음악 중지
+    feverAD = this.sound.add('fever');
+    feverAD.play(); // 피버타임음악 실행
     this.fever_remain_time = FEVER_TIME;
     const feverTimer = setInterval(() => {
       console.log(this.fever_remain_time);
@@ -320,11 +334,13 @@ class Logic extends Phaser.Scene {
         this.fever_remain_time = 0;
         progressValue = 0;
         clearInterval(feverTimer);
+        musicAD.resume(); // 배경음악 다시 재생
       }
     }, 1000);
   }
 
   
+  // 페널티로 스파이스바를 10번 연타하게 
   penalty() {
     if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.keys[32])) {
       {
@@ -338,6 +354,7 @@ class Logic extends Phaser.Scene {
     }
   }
 
+  // 옳은 키가 입력되면 progressBar가 증가하도록
   increaseProgress(value) {
     if (progressValue != 1) {
       progressValue = Phaser.Math.Clamp(progressValue + value, 0, 1);
