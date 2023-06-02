@@ -8,6 +8,7 @@ const FEVER_TIME = 5;
 
 var time = 30;
 var score = 0;
+var combo = 0;
 var grade = ' ';
 var progressValue = 0;
 var finished = false;
@@ -239,6 +240,27 @@ class Logic extends Phaser.Scene {
 
     this.add.text(30, 30, "Score : " + score, { font: "25px lato", fill: "#000000" });
     this.add.text(670, 30, "Time :  " + time, { font: "25px lato", fill: "#000000" });
+    if(combo < 5) {
+      this.add.text(590, 100, combo + " Combo", { font: "20px lato", fill: "#000000" });
+    }
+    else if(combo >= 5 && combo < 10) {
+      this.add.text(590, 100, combo + " Combo", { font: "22px lato", fill: "#1E90FF" });
+    }
+    else if(combo >= 10 && combo < 20) {
+      this.add.text(590, 100, combo + " Combo", { font: "24px lato", fill: "#8A2BE2" });
+    }
+    else if(combo >= 20 && combo < 30) {
+      this.add.text(590, 100, combo + " Combo", { font: "26px lato", fill: "#FF69B4" });
+    }
+    else if(combo >= 30 && combo < 40) {
+      this.add.text(590, 100, combo + " Combo", { font: "28px lato", fill: "#FFA500" });
+    }
+    else if(combo >= 40 && combo < 50) {
+      this.add.text(590, 100, combo + " Combo", { font: "30px lato", fill: "#FF4500" });
+    }
+    else {
+      this.add.text(590, 100, combo + " Combo", { font: "32px lato", fill: "#FFFF33" });
+    }
 
     if (time <= 0) {
       this.add.text(320, 50, "end", { font: "100px lato", fill: "#FF0000" }); //종료 확인용(없어도 됨)
@@ -256,6 +278,7 @@ class Logic extends Phaser.Scene {
       if (Phaser.Input.Keyboard.JustDown(this.input.keyboard.keys[32])) 
       {
         score++;
+        combo++;
         this.invalidate();
       }
     }
@@ -324,30 +347,48 @@ class Logic extends Phaser.Scene {
   isA() {
     if (this.objs[0] == 'A') {
       score++;
-      if (progressValue == 1)
+      combo++;
+      if (progressValue == 1) {
         score++;
+        combo++;
+      }
       return true;
     }
-    else return false;
+    else{
+      combo = 0;
+      return false;
+    }
   }
 
   isB() {
     if (this.objs[0] == 'B') {
       score++;
-      if (progressValue == 1)
+      combo++;
+      if (progressValue == 1) {
         score++;
+        combo++;
+      }
       return true;
     }
-    else return false;
+    else{
+      combo = 0;
+      return false;
+    }
   }
   isC() {
     if (this.objs[0] == 'C') {
       score++;
-      if (progressValue == 1)
+      combo++;
+      if (progressValue == 1) {
         score++;
+        combo++;
+      }
       return true;
     }
-    else return false;
+    else{
+      combo = 0;
+      return false;
+    }
   }
 
 }
