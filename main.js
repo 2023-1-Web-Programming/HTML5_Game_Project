@@ -105,15 +105,15 @@ class Finish extends Phaser.Scene{
   }
 
   Score(){
-    if(score > 79)
+    if(score >= 130)
       grade = 'A';  
-    else if(score < 80 && score > 59)
+    else if(score < 130 && score >= 100)
       grade = 'B';
-    else if(score < 60 && score > 39)
+    else if(score < 100 && score >= 70)
       grade = 'C';
-    else if (score < 40 && score > 19)
+    else if (score < 70 && score >= 41)
       grade = 'D';
-    else if (score <20)
+    else if (score < 39)
       grade = 'F';
   }
 }
